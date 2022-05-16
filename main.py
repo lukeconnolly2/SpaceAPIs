@@ -7,6 +7,7 @@ def main():
     iss_location = get_iss_location()
     print("ISS Location:")
     print(f"Location is {iss_location}, which is above {geo_coding(iss_location)}\n")
+
     print("Nasa Picture of the day:")
     print(get_nasa_picture_of_day())
 
