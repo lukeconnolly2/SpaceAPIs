@@ -17,6 +17,8 @@ class bcolors:
 
 def main():
     check_secrets()
+    print(f"{bcolors.HEADER}{bcolors.BOLD}Space Facts {bcolors.ENDC}")
+
     iss_location = get_iss_location()
     print(f"{bcolors.BOLD}ISS Location:{bcolors.ENDC}")
     print(f"Location is {iss_location}, which is above {geo_coding(iss_location)}\n")
