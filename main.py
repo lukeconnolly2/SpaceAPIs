@@ -18,11 +18,15 @@ class bcolors:
 def main():
     check_secrets()
     iss_location = get_iss_location()
-    print("ISS Location:")
+    print(f"{bcolors.BOLD}ISS Location:{bcolors.ENDC}")
     print(f"Location is {iss_location}, which is above {geo_coding(iss_location)}\n")
 
-    print("Nasa Picture of the day:")
-    print(get_nasa_picture_of_day())
+    print(f"{bcolors.BOLD}Nasa Picture of the day:{bcolors.ENDC}")
+    print(get_nasa_picture_of_day() + '\n')
+
+    people_in_space = get_people_in_space()
+    print(f"{bcolors.BOLD}Currently there are {people_in_space[0]} people in space:{bcolors.ENDC}")
+    print(people_in_space[1])
 
 
 # Returns a tuple of longitude and latitude
@@ -54,6 +58,15 @@ def get_nasa_picture_of_day():
     return f"Titled: {obj['title']}\nUrl: {obj['hdurl']}"
 
 
+def get_people_in_space():
+    end_point = "http://api.open-notify.org/astros.json"
+    obj = json.loads(r.get(end_point).text)["people"]
+    formatted_string = ""
+    for person in obj:
+        formatted_string += f"{person['name']} in the {person['craft']}\n"
+    return len(obj), formatted_string
+
+
 def check_secrets():
     position_stack_url = "https://positionstack.com/"
     position_stack_end_point = f"http://api.positionstack.com/v1/forward?" \
@@ -75,13 +88,13 @@ def check_secrets():
 
     # Check if api keys are valid
     if "error" in r.get(position_stack_end_point).text:
-        print(f"{bcolors.WARNING}Position Stack api key is invalid\nYou can generate one here: {position_stack_url}")
+        print(f"{bcolors.FAIL}Position Stack api key is invalid\nYou can generate one here: {position_stack_url}")
         exit(1)
 
     if "API_KEY_INVALID" in r.get(nasa_end_point).text:
-        print(f"{bcolors.WARNING}Nasa api key is invalid\nYou can generate one here: {nasa_url}")
+        print(f"{bcolors.FAIL}Nasa api key is invalid\nYou can generate one here: {nasa_url}")
         exit(1)
-
+    print(f"{bcolors.OKGREEN}Api keys are working{bcolors.ENDC}")
 
 if __name__ == '__main__':
     main()
