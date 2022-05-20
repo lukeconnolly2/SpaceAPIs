@@ -1,6 +1,8 @@
 import SECRETS as secrets
 import json
 import requests as r
+import datetime
+import random
 
 
 class bcolors:
@@ -11,8 +13,8 @@ class bcolors:
     WARNING = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
-    BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    BOLD = '\033[1m'
 
 
 def main():
@@ -29,6 +31,8 @@ def main():
     people_in_space = get_people_in_space()
     print(f"{bcolors.BOLD}Currently there are {people_in_space[0]} people in space:{bcolors.ENDC}")
     print(people_in_space[1])
+
+    get_photos_from_mars_rover()
 
 
 # Returns a tuple of longitude and latitude
@@ -97,6 +101,25 @@ def check_secrets():
         print(f"{bcolors.FAIL}Nasa api key is invalid\nYou can generate one here: {nasa_url}")
         exit(1)
     print(f"{bcolors.OKGREEN}Api keys are working{bcolors.ENDC}")
+
+
+def get_photos_from_mars_rover():
+    obj = closest_rover_photo_day()
+    print(f"{bcolors.BOLD}Photos from the {obj[0]['rover']['name']} on the date {obj[0]['earth_date']}{bcolors.ENDC}")
+    for photo in random.sample(obj, 5):
+        print(f"Photo on the {photo['camera']['full_name']}: {photo['img_src']}")
+
+
+def closest_rover_photo_day():
+    for i in range(0, 20):
+        date_to_check = datetime.date.today() - datetime.timedelta(days=i)
+        end_point = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?" \
+                    f"earth_date={date_to_check}" \
+                    f"&api_key={secrets.nasa_api_key}"
+        obj = r.get(end_point).json()["photos"]
+        if len(obj) != 0:
+            return obj
+
 
 if __name__ == '__main__':
     main()
