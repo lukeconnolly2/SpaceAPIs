@@ -39,6 +39,7 @@ def main():
     get_space_news()
 
 
+
 # Returns a tuple of longitude and latitude
 def get_iss_location():
     api_url = "http://api.open-notify.org/iss-now.json"
@@ -175,11 +176,20 @@ def get_space_news():
 
     headers = {
         "X-RapidAPI-Host": "space-news.p.rapidapi.com",
-        "X-RapidAPI-Key": "SIGN-UP-FOR-KEY"
+        "X-RapidAPI-Key": "67167d2a9cmshc58048f31e25f90p1e5d4cjsn132ef897bf0f"
     }
 
+
     obj = r.request("GET", url, headers=headers).json()
-    print(obj)
+    #print(obj)
+
+    news = 3
+    if len(obj) < news:
+        news = len(obj)
+    print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news} Space Facts!{bcolors.ENDC}\n")
+    for news in random.sample(obj, news):
+         print(f"{bcolors.BOLD}{news['title'].strip()}  : \n{news['url'].strip()}{bcolors.ENDC} \n")
+
 
 
 if __name__ == '__main__':
