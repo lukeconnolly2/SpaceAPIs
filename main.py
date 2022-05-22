@@ -109,7 +109,6 @@ def get_photos_from_mars_rover():
     sample = 5
     if len(obj) < sample:
         sample = len(obj)
-
     for photo in random.sample(obj, sample):
         print(f"Photo from the {photo['camera']['full_name']}: {photo['img_src']}")
 
