@@ -171,7 +171,7 @@ def print_earth_image():
         print(f"This photo was taken over {geo_coding(coords.values())}")
 
 def get_space_news():
-    url = "https://space-news.p.rapidapi.com/news/guardian"
+    url ="https://space-news.p.rapidapi.com/news/guardian"
 
     headers = {
         "X-RapidAPI-Host": "space-news.p.rapidapi.com",
