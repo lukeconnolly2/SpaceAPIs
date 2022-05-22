@@ -36,6 +36,8 @@ def main():
 
     print_earth_image()
 
+    get_space_news()
+
 
 # Returns a tuple of longitude and latitude
 def get_iss_location():
@@ -46,12 +48,11 @@ def get_iss_location():
 
 # Returns the location of the coordinates
 def geo_coding(coords):
-    lat = coords[0]
-    long = coords[1]
+    lat, long = coords
     end_point = f"http://api.positionstack.com/v1/reverse?" \
                 f"access_key={secrets.position_stack_api_key}" \
                 f"&query={lat},{long}"
-    obj = json.loads(r.get(end_point).text)["data"][0]
+    obj = r.get(end_point).json()["data"][0]
     name = obj["name"]
     country = obj["country"]
     if obj["country"] is None:
@@ -148,22 +149,37 @@ def get_earth_image_object():
         sample = len(obj)
 
     list_of_photos = []
+    list_coords = []
     for photo in random.sample(obj, sample):
+        list_coords.append(photo["coords"]["centroid_coordinates"])
         list_of_photos.append(photo["image"])
 
-    return date, list_of_photos
+    return date, list_of_photos, list_coords
 
 
 def print_earth_image():
-    date, list_of_photos = get_earth_image_object()
+    date, list_of_photos, list_coords = get_earth_image_object()
 
     print(f"\n{bcolors.BOLD}Photos of Earth taken on {date} from the ISS :{bcolors.ENDC}")
-    for img in list_of_photos:
+
+    for img, coords in zip(list_of_photos, list_coords):
         url = f"https://epic.gsfc.nasa.gov/archive/natural" \
               f"/{date.year}/{date.month:02d}/{date.day}" \
               f"/png" \
               f"/{img}.png"
         print(f"{url}")
+        print(f"This photo was taken over {geo_coding(coords.values())}")
+
+def get_space_news():
+    url = "https://space-news.p.rapidapi.com/news/guardian"
+
+    headers = {
+        "X-RapidAPI-Host": "space-news.p.rapidapi.com",
+        "X-RapidAPI-Key": "SIGN-UP-FOR-KEY"
+    }
+
+    obj = r.request("GET", url, headers=headers).json()
+    print(obj)
 
 
 if __name__ == '__main__':
