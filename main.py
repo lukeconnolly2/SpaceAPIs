@@ -34,6 +34,8 @@ def main():
 
     get_photos_from_mars_rover()
 
+    print_earth_image()
+
 
 # Returns a tuple of longitude and latitude
 def get_iss_location():
@@ -122,6 +124,46 @@ def get_photos_obj():
         obj = r.get(end_point).json()["photos"]
         if len(obj) != 0:
             return obj
+
+
+def get_earth_image_object():
+    date = datetime.date.today()
+
+    end_point = f" https://api.nasa.gov/EPIC/api/natural/" \
+                f"date/{date}" \
+                f"?api_key={secrets.nasa_api_key}"
+
+    obj = r.get(end_point).json()
+
+    if len(obj) == 0:
+        date = datetime.date.today() - datetime.timedelta(1)
+        end_point = f" https://api.nasa.gov/EPIC/api/natural/" \
+                    f"date/{date}" \
+                    f"?api_key={secrets.nasa_api_key}"
+        obj = r.get(end_point).json()
+
+    sample = 3
+
+    if len(obj) < sample:
+        sample = len(obj)
+
+    list_of_photos = []
+    for photo in random.sample(obj, sample):
+        list_of_photos.append(photo["image"])
+
+    return date, list_of_photos
+
+
+def print_earth_image():
+    date, list_of_photos = get_earth_image_object()
+
+    print(f"\n{bcolors.BOLD}Photos of Earth taken on {date} from the ISS :{bcolors.ENDC}")
+    for img in list_of_photos:
+        url = f"https://epic.gsfc.nasa.gov/archive/natural" \
+              f"/{date.year}/{date.month:02d}/{date.day}" \
+              f"/png" \
+              f"/{img}.png"
+        print(f"{url}")
 
 
 if __name__ == '__main__':
