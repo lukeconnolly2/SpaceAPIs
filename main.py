@@ -104,13 +104,17 @@ def check_secrets():
 
 
 def get_photos_from_mars_rover():
-    obj = closest_rover_photo_day()
+    obj = get_photos_obj()
     print(f"{bcolors.BOLD}Photos from the {obj[0]['rover']['name']} on the date {obj[0]['earth_date']}{bcolors.ENDC}")
-    for photo in random.sample(obj, 5):
-        print(f"Photo on the {photo['camera']['full_name']}: {photo['img_src']}")
+    sample = 5
+    if len(obj) < sample:
+        sample = len(obj)
+
+    for photo in random.sample(obj, sample):
+        print(f"Photo from the {photo['camera']['full_name']}: {photo['img_src']}")
 
 
-def closest_rover_photo_day():
+def get_photos_obj():
     for i in range(0, 20):
         date_to_check = datetime.date.today() - datetime.timedelta(days=i)
         end_point = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?" \
