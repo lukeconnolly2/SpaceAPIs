@@ -181,13 +181,13 @@ def get_space_news():
 
 
     obj = r.request("GET", url, headers=headers).json()
-    #print(obj)
+    print(obj)
 
     news = 3
-    if len(obj) < news:
+    if len(obj)/2 < news:
         news = len(obj)
-    print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news} Space Facts!{bcolors.ENDC}\n")
-    for news in random.sample(obj, news):
+    print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news} Pieces of Space News!{bcolors.ENDC}\n")
+    for news in random.sample(obj[::2], news):
          print(f"{bcolors.BOLD}{news['title'].strip()}  : \n{news['url'].strip()}{bcolors.ENDC} \n")
 
 
