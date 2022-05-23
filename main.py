@@ -34,6 +34,8 @@ def main():
 
     get_photos_from_mars_rover()
 
+    print_earth_image()
+
     get_space_news()
 
     print_earth_image()
@@ -173,22 +175,62 @@ def print_earth_image():
 
 def get_space_news():
     url = "https://space-news.p.rapidapi.com/news/guardian"
-
     headers = {
         "X-RapidAPI-Host": "space-news.p.rapidapi.com",
-        "X-RapidAPI-Key": "67167d2a9cmshc58048f31e25f90p1e5d4cjsn132ef897bf0f"
+        "X-RapidAPI-Key": secrets.space_news_api_key
     }
 
-    obj = r.request("GET", url, headers=headers).json()
-    print(obj)
+    obj = r.get(url, headers=headers).json()[::2]
+    news_items = 3
 
-    news = 3
-    if len(obj) / 2 < news:
-        news = len(obj)
-    print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news} Pieces of Space News!{bcolors.ENDC}\n")
-    for news in random.sample(obj[::2], news):
+    if len(obj) < 3:
+        news_items = len(obj)
+
+    print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news_items} Pieces of Space News!{bcolors.ENDC}\n")
+
+    for news in random.sample(obj, news_items):
         print(f"{bcolors.BOLD}{news['title'].strip()}  : \n{news['url'].strip()}{bcolors.ENDC} \n")
 
+
+def get_earth_image_object():
+    date = datetime.date.today()
+
+    end_point = f" https://api.nasa.gov/EPIC/api/natural/" \
+                f"date/{date}" \
+                f"?api_key={secrets.nasa_api_key}"
+
+    obj = r.get(end_point).json()
+
+    if len(obj) == 0:
+        date = datetime.date.today() - datetime.timedelta(1)
+        end_point = f" https://api.nasa.gov/EPIC/api/natural/" \
+                    f"date/{date}" \
+                    f"?api_key={secrets.nasa_api_key}"
+        obj = r.get(end_point).json()
+
+    sample = 3
+    if len(obj) < sample:
+        sample = len(obj)
+
+    list_of_photos = []
+    list_coords = []
+    for photo in random.sample(obj, sample):
+        list_coords.append(photo["coords"]["centroid_coordinates"])
+        list_of_photos.append(photo["image"])
+
+    return date, list_of_photos, list_coords
+
+
+def print_earth_image():
+    date, list_of_photos, list_of_coords = get_earth_image_object()
+
+    print(f"\n{bcolors.BOLD}Photos of Earth taken on {date} from the ISS :{bcolors.ENDC}")
+    for img in list_of_photos:
+        url = f"https://epic.gsfc.nasa.gov/archive/natural" \
+              f"/{date.year}/{date.month:02d}/{date.day}" \
+              f"/png" \
+              f"/{img}.png"
+        print(f"{url}")
 
 
 if __name__ == '__main__':
