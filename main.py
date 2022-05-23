@@ -88,6 +88,8 @@ def check_secrets():
     nasa_end_point = f"https://api.nasa.gov/planetary/apod?" \
                      f"api_key={secrets.nasa_api_key}"
 
+    space_news_api = "https://rapidapi.com/neron244-B3Tc6nyYpKS/api/space-news/"
+
     # Check keys exist
     if secrets.position_stack_api_key == "ADD POSITION STACK KEY HERE":
         print(f"{bcolors.WARNING}Please add a position stack api key\nYou can generate one here: {position_stack_url}")
@@ -95,6 +97,10 @@ def check_secrets():
 
     if secrets.nasa_api_key == "ADD NASA API KEY HERE":
         print(f"{bcolors.WARNING}Please add a nasa api key\nYou can generate one here: {nasa_url}")
+        exit(1)
+
+    if secrets.space_news_api_key == "ADD SPACE NEWS API KEY HERE":
+        print(f"{bcolors.WARNING}Please add a space news api key\nYou can generate one here: {space_news_api}")
         exit(1)
 
     # Check if api keys are valid
