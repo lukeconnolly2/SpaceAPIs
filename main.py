@@ -34,10 +34,9 @@ def main():
 
     get_photos_from_mars_rover()
 
-    print_earth_image()
-
     get_space_news()
 
+    print_earth_image()
 
 
 # Returns a tuple of longitude and latitude
@@ -171,24 +170,24 @@ def print_earth_image():
         print(f"{url}")
         print(f"This photo was taken over {geo_coding(coords.values())}")
 
+
 def get_space_news():
-    url ="https://space-news.p.rapidapi.com/news/guardian"
+    url = "https://space-news.p.rapidapi.com/news/guardian"
 
     headers = {
         "X-RapidAPI-Host": "space-news.p.rapidapi.com",
         "X-RapidAPI-Key": "67167d2a9cmshc58048f31e25f90p1e5d4cjsn132ef897bf0f"
     }
 
-
     obj = r.request("GET", url, headers=headers).json()
     print(obj)
 
     news = 3
-    if len(obj)/2 < news:
+    if len(obj) / 2 < news:
         news = len(obj)
     print(f"\n{bcolors.HEADER}{bcolors.BOLD}{news} Pieces of Space News!{bcolors.ENDC}\n")
     for news in random.sample(obj[::2], news):
-         print(f"{bcolors.BOLD}{news['title'].strip()}  : \n{news['url'].strip()}{bcolors.ENDC} \n")
+        print(f"{bcolors.BOLD}{news['title'].strip()}  : \n{news['url'].strip()}{bcolors.ENDC} \n")
 
 
 
