@@ -1,3 +1,3 @@
-position_stack_api_key ="0e8671472d3b5c9bce86684270461706"
-nasa_api_key ="aGi4jqXgh57KzYlV8za0pHpRkoczpOmbLTfUMoFl"
-space_news_api_key ="67167d2a9cmshc58048f31e25f90p1e5d4cjsn132ef897bf0f"
+position_stack_api_key ="ADD POSITION STACK KEY HERE"
+nasa_api_key ="ADD POSITION STACK KEY HERE"
+space_news_api_key ="ADD NASA API KEY HERE"
